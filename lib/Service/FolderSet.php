@@ -10,7 +10,6 @@ class FolderSet
 	public static function generate()
 	{
 		$bucket = new Bucket();
-		$errors = 0;
 
 		$rows = [];
 		for ($k=0; $k<18; $k++) {
@@ -29,14 +28,10 @@ class FolderSet
 		$folders = [];
 		for($i=0; $i<6; $i++) {
 			$folder = new Folder();
-			try {
-				$folder->addRow(array_pop($rows));
-				$folder->addRow(array_pop($rows));
-				$folder->addRow(array_pop($rows));
-			} catch(FolderException $e) {
-				$errors++;
-			}	
-
+			$folder->addRow(array_pop($rows));
+			$folder->addRow(array_pop($rows));
+			$folder->addRow(array_pop($rows));
+			
 			$folders[] = $folder;
 		}		
 
