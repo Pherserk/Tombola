@@ -1,4 +1,7 @@
 {	
+	"name": "pherserk/tombola",
+	"description": "Bingo cards generator",
+	"license": "GPL-3.0+",
 	"authors": [
 		{
 			"name": "Michele Carino",
