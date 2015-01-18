@@ -18,6 +18,9 @@ class Folder
 		}	
 	}
 
+	/**
+	 * @param Row $row
+	 */
 	public function addRow(Row $row)
 	{
 		$added = false;

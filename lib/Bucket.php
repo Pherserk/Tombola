@@ -25,6 +25,9 @@ class Bucket
 		$this->history = [];
 	}
 
+	/**
+	 * @return int
+	 */
 	public function extractNumber()
 	{
 		$halfScoreIndex = $this->getNextHalfScoreIndex();

@@ -23,6 +23,9 @@ class Row
 		}	
 	}
 
+	/**
+	 * @param int $number
+	 */
 	public function addNumber($number)
 	{
 		$numberHalfScore = Math::numberToHalfScore($number);
@@ -55,6 +58,9 @@ class Row
 		}
 	}
 
+	/**
+	 * @return array[int]
+	 */
 	public function getCells()
 	{
 		asort($this->cells);

@@ -4,6 +4,9 @@ namespace Pherserk\Tombola\Service;
 
 class FolderSet
 {
+	/**
+	 * @return array[Row]
+	 */
 	public static function generate()
 	{
 		$bucket = new Bucket();

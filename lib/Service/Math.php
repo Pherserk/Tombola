@@ -4,6 +4,10 @@ namespace Pherserk\Tombola\Service;
 
 class Math
 {
+	/**
+	 * @param int $number
+	 * @return int
+	 */
 	public static function numberToHalfScore($number)
 	{
 		if ($number < 10) {
