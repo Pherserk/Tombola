@@ -40,6 +40,8 @@ class FolderSet
 			$folders[] = $folder;
 		}		
 
+		shuffle($folders);
+
 		return $folders;	
 	}
 }
