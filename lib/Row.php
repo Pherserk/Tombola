@@ -7,20 +7,16 @@ use Pherserk\Tombola\Exception\RowException;
 
 class Row
 {
-	/* @var array[int] */
+	/* @var array */
 	protected $cells;
 
-	/* @var array[int] */
+	/* @var array */
 	protected $halfScores;
 
 	public function __construct()
 	{
 		$this->cells = [];
 		$this->halfScores = [];
-
-		for ($i=0; $i<5; $i++) {
-			$this->cells[] = null;
-		}	
 	}
 
 	public function addNumber($number)
@@ -39,20 +35,12 @@ class Row
 			throw new RowException('Out of range value');
 		}
 
-		$added = false;
-		foreach ($this->cells as $index => $cellTofill) {
-			if (is_null($cellTofill)) {
-				$this->cells[$index] = $number;
-				$this->halfScores[] = $numberHalfScore;
-				$added = true;
-
-				break;
-			}
-		}
-
-		if (!$added) {
+		if (count($this->cells) >= 5) {
 			throw new RowException('Row is full');
 		}
+
+		$this->cells[] = $number;
+		$this->halfScores[] = $numberHalfScore;
 	}
 
 	public function getCells()
@@ -60,5 +48,19 @@ class Row
 		asort($this->cells);
 
 		return $this->cells;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCompleteRowArray()
+	{
+		$completeRow = array_fill(0, 9, 0);
+		foreach ($this->cells as $cell) {
+			$index = Math::numberToHalfScore($cell);
+			$completeRow[$index] = $cell;
+		}
+
+		return $completeRow;
 	}
 }

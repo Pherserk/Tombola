@@ -2,6 +2,12 @@
 
 namespace Pherserk\Tombola\Service;
 
+use Pherserk\Tombola\Bucket;
+use Pherserk\Tombola\Exception\FolderException;
+use Pherserk\Tombola\Exception\RowException;
+use Pherserk\Tombola\Folder;
+use Pherserk\Tombola\Row;
+
 class FolderSet
 {
 	public static function generate()
