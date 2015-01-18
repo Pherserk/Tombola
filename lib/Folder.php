@@ -3,42 +3,47 @@
 namespace Pherserk\Tombola;
 
 use Pherserk\Tombola\Exception\FolderException;
+use Pherserk\Tombola\Service\Math;
 
 class Folder
 {
-	/* @var array[array[int]] */
+	/* @var Row[] */
 	protected $rows;
 
 	public function __construct()
 	{
-		$this->rows = [];
-
-		for ($i=0; $i<3; $i++) {
-			$this->rows[] = null;
-		}	
-	}
-
-	public function addRow(Row $row)
-	{
-		$added = false;
-		foreach ($this->rows as $index => $rowToFill) {
-			if (is_null($rowToFill)) {
-				$this->rows[$index] = $row;
-				$added = true;
-				break;
-			}
-		}
-
-		if (!$added) {
-			throw new FolderException('Folder is full');
-		}
+		$this->rows = array();
 	}
 
 	/**
-	 * @return array[Row]
+	 * @param Row $row
+	 * @throws FolderException
+	 */
+	public function addRow(Row $row)
+	{
+		if (count($this->rows) >= 3) {
+			throw new FolderException('Folder is full');
+		}
+		$this->rows[] = $row;
+	}
+
+	/**
+	 * @return Row[]
 	 */
 	public function getRows()
 	{
 		return $this->rows;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function asMatrix()
+	{
+		$matrix = array();
+		foreach ($this->rows as $row) {
+			$matrix[] = $row->getCompleteRowArray();
+		}
+		return $matrix;
 	}
 }

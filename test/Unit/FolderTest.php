@@ -4,13 +4,12 @@ namespace Pherserk\Tombola\Test;
 
 use Pherserk\Tombola\Row;
 use Pherserk\Tombola\Folder;
-use Pherserk\Tombola\Exception\FolderException;
 
 class FolderTest extends \PHPUnit_Framework_TestCase
 {	
 	/**
 	 * @covers Folder::addRow  
- 	 */
+	 */
 	public function testAddRow()
 	{
 		$rows = [];
@@ -29,9 +28,9 @@ class FolderTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-     * @expectedException Pherserk\Tombola\Exception\FolderException
-     * @covers Folder::addRow  
-     */
+	 * @expectedException \Pherserk\Tombola\Exception\FolderException
+	 * @covers Folder::addRow
+	 */
 	public function testLimitOverflowThrowsException()
 	{
 		$rows = [];
