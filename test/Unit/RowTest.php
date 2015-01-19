@@ -48,11 +48,7 @@ class RowTest extends \PHPUnit_Framework_TestCase
 	{
 		$row = new Row();
 		for ($i=0; $i<6; $i++) {
-			try {
-				$row->addNumber($i + 1);
-			} catch(Exception $e) {
-				echo $e->getMessage() . PHP_EOL;
-			}
+			$row->addNumber($i + 1);
 		}
 	} 
 
@@ -63,10 +59,6 @@ class RowTest extends \PHPUnit_Framework_TestCase
 	public function testOutOfRangeNumberThrowsException()
 	{
 		$row = new Row();
-		try {
 			$row->addNumber(0);
-		} catch(Exception $e) {
-			echo $e->getMessage() . PHP_EOL;
-		}
 	}
 }
