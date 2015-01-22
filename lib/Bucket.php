@@ -8,7 +8,8 @@ use Pherserk\Tombola\Exception\BucketException;
 class Bucket
 {
 	protected $halfScores;
-	protected $history;
+	protected $rowsHistory;
+	protected $folderHistory;
 
 	public function __construct()
 	{
@@ -20,9 +21,8 @@ class Bucket
 			$this->halfScores[$index][] = $number;
 		}
 
-		//Halfscores order matter (do not shuffle!)
-
-		$this->history = [];
+		$this->rowsHistory = [];
+		$this->folderHistory = [];
 	}
 
 	/**
@@ -33,12 +33,8 @@ class Bucket
 		$halfScoreIndex = $this->getNextHalfScoreIndex();
 	
 		$number = array_pop($this->halfScores[$halfScoreIndex]);
-		$this->history[] = $number;
-
-		if(count($this->history) === 5) {
-			$this->history = [];
-		}
 		
+		$this->updateHistories($number);	
 
 		return $number;
 	}
@@ -56,11 +52,18 @@ class Bucket
 
 	protected function getUnaivalableHalfScoreIndexes()
 	{
-		$used = [];
-		foreach ($this->history as $number) {
-			$used[] = Math::numberToHalfScore($number);
+		$usedInRow = [];
+		foreach ($this->rowsHistory as $number) {
+			$usedInRow[] = Math::numberToHalfScore($number);
 		}
 
+		//TODO it seems that for construction the first check and the
+		//best choice strategy make the following control unnecessary
+		$usedInFolder = [];
+		foreach ($this->folderHistory as $number) {
+			$usedInFolder[] = Math::numberToHalfScore($number);
+		}
+		
 		$consumed = [];
 		foreach ($this->halfScores as $index => $halfScore) {
 			if (count($halfScore) === 0) {
@@ -68,7 +71,7 @@ class Bucket
 			}
 		}
 
-		return array_merge($consumed, $used);
+		return array_merge($consumed, $usedInRow);
 	}
 
 	protected function getBestChoiceFromAivalables($availables)
@@ -90,6 +93,20 @@ class Bucket
 		}
 
 		return $nextHalfScoreIndex;
+	}
+
+	protected function updateHistories($number)
+	{
+		$this->rowsHistory[] = $number;
+		$this->folderHistory[] = $number;
+
+		if(count($this->rowsHistory) === 5) {
+			$this->rowsHistory = [];
+		}
+
+		if(count($this->folderHistory) === 15) {
+			$this->folderHistory = [];
+		}
 	}
 }
 
