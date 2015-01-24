@@ -2,14 +2,14 @@
 
 namespace Pherserk\Tombola;
 
-use Pherserk\Tombola\Service\Math;
 use Pherserk\Tombola\Exception\BucketException;
+use Pherserk\Tombola\HalfScoresHistory;
+use Pherserk\Tombola\Service\Math;
 
 class Bucket
 {
 	protected $halfScores;
-	protected $rowsHistory;
-	protected $folderHistory;
+	protected $halfScoresHistory;
 
 	public function __construct()
 	{
@@ -20,9 +20,8 @@ class Bucket
 			$index = Math::numberToHalfScore($number);
 			$this->halfScores[$index][] = $number;
 		}
-
-		$this->rowsHistory = [];
-		$this->folderHistory = [];
+		
+		$this->halfScoresHistory = new HalfScoresHistory();		
 	}
 
 	/**
@@ -34,7 +33,7 @@ class Bucket
 	
 		$number = array_pop($this->halfScores[$halfScoreIndex]);
 		
-		$this->updateHistories($number);	
+		$this->halfScoresHistory->add($number);	
 
 		return $number;
 	}
@@ -53,14 +52,14 @@ class Bucket
 	protected function getUnaivalableHalfScoreIndexes()
 	{
 		$usedInRow = [];
-		foreach ($this->rowsHistory as $number) {
+		foreach ($this->halfScoresHistory->getRowHistory() as $number) {
 			$usedInRow[] = Math::numberToHalfScore($number);
 		}
 
 		//TODO it seems that for construction the first check and the
 		//best choice strategy make the following control unnecessary
 		$usedInFolder = [];
-		foreach ($this->folderHistory as $number) {
+		foreach ($this->halfScoresHistory->getFolderHistory() as $number) {
 			$usedInFolder[] = Math::numberToHalfScore($number);
 		}
 		
@@ -93,20 +92,6 @@ class Bucket
 		}
 
 		return $nextHalfScoreIndex;
-	}
-
-	protected function updateHistories($number)
-	{
-		$this->rowsHistory[] = $number;
-		$this->folderHistory[] = $number;
-
-		if(count($this->rowsHistory) === 5) {
-			$this->rowsHistory = [];
-		}
-
-		if(count($this->folderHistory) === 15) {
-			$this->folderHistory = [];
-		}
 	}
 }
 
