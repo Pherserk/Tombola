@@ -42,6 +42,8 @@ class Folder
 
 		$this->numbersHistory = array_merge($this->numbersHistory, $row->getCells());
 		$this->checkNumbersHistory();
+
+		return $this;
 	}
 
 	/**
@@ -54,16 +56,19 @@ class Folder
 
 	protected function checkNumbersHistory()
 	{
+		if (count($this->numbersHistory) !== 15) {
+			return;
+		}
+
 		$halfScores = [];
 		foreach ($this->numbersHistory as $number) {
-			$halfScore = Math::numberToHalfScore($number);
-			if (!isset($halfScores[$halfScore])) {
-				$halfScores[$halfScore] = 1;
-			} else if($halfScores[$halfScore] === 1){
-				$halfScores[$halfScore]++;
-			} else {
-				Throw new FolderException('Folder contains same half score more than twice');
-			}
+			$halfScores[] = Math::numberToHalfScore($number);
+		}
+
+		$triples = Math::findTriples($halfScores);
+
+		if (count($triples) > 0) {
+			throw new FolderException('Folder can\'t contain same halfscore more than twice');
 		}
 	}
 }

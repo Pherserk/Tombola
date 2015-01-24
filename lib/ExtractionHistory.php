@@ -5,7 +5,7 @@ namespace Pherserk\Tombola;
 use Pherserk\Tombola\Service\Math;
 use Pherserk\Tombola\Exception\BucketException;
 
-class HalfScoresHistory
+class ExtractionHistory
 {
 	protected $rowsHistory;
 	protected $folderHistory;

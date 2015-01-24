@@ -2,9 +2,9 @@
 
 namespace Pherserk\Tombola\Test;
 
-use Pherserk\Tombola\HalfScoresHistory;
+use Pherserk\Tombola\ExtractionHistory;
 
-class HalfScoresHistoryTest extends \PHPUnit_Framework_TestCase
+class ExtractionHistoryTest extends \PHPUnit_Framework_TestCase
 {	
 
 	/**
@@ -12,7 +12,7 @@ class HalfScoresHistoryTest extends \PHPUnit_Framework_TestCase
  	 */
 	public function testAdd()
 	{
-		$extractionHistory = new HalfScoresHistory();
+		$extractionHistory = new ExtractionHistory();
 		$extractionHistory->add(4);
 
 		$this->assertEquals(4, $extractionHistory->getRowHistory()[0]);

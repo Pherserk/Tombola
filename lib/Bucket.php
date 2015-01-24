@@ -3,13 +3,13 @@
 namespace Pherserk\Tombola;
 
 use Pherserk\Tombola\Exception\BucketException;
-use Pherserk\Tombola\HalfScoresHistory;
+use Pherserk\Tombola\ExtractionHistory;
 use Pherserk\Tombola\Service\Math;
 
 class Bucket
 {
 	protected $halfScores;
-	protected $halfScoresHistory;
+	protected $extractionHistory;
 
 	public function __construct()
 	{
@@ -21,7 +21,7 @@ class Bucket
 			$this->halfScores[$index][] = $number;
 		}
 		
-		$this->halfScoresHistory = new HalfScoresHistory();		
+		$this->extractionHistory = new ExtractionHistory();		
 	}
 
 	/**
@@ -33,7 +33,7 @@ class Bucket
 	
 		$number = array_pop($this->halfScores[$halfScoreIndex]);
 		
-		$this->halfScoresHistory->add($number);	
+		$this->extractionHistory->add($number);	
 
 		return $number;
 	}
@@ -46,23 +46,27 @@ class Bucket
 
 		$availables = array_diff($all, $unavailables); 
 
+		if (count($availables) === 0) {
+			throw new BucketException('Number availability exausted');
+		}
+
 		return $this->getBestChoiceFromAivalables($availables);		
 	}
 
 	protected function getUnaivalableHalfScoreIndexes()
 	{
 		$usedInRow = [];
-		foreach ($this->halfScoresHistory->getRowHistory() as $number) {
+		foreach ($this->extractionHistory->getRowHistory() as $number) {
 			$usedInRow[] = Math::numberToHalfScore($number);
 		}
 
-		//TODO it seems that for construction the first check and the
-		//best choice strategy make the following control unnecessary
 		$usedInFolder = [];
-		foreach ($this->halfScoresHistory->getFolderHistory() as $number) {
+		foreach ($this->extractionHistory->getFolderHistory() as $number) {
 			$usedInFolder[] = Math::numberToHalfScore($number);
 		}
-		
+
+		$usedTwiceInFolder = Math::findDoubles($usedInFolder);
+
 		$consumed = [];
 		foreach ($this->halfScores as $index => $halfScore) {
 			if (count($halfScore) === 0) {
@@ -70,15 +74,11 @@ class Bucket
 			}
 		}
 
-		return array_merge($consumed, $usedInRow);
+		return array_merge($consumed, $usedInRow, $usedTwiceInFolder);
 	}
 
 	protected function getBestChoiceFromAivalables($availables)
-	{
-		if (count($availables) === 0) {
-			throw new BucketException('Number availability exausted');
-		}
-
+	{		
 		$longest = 0;
 		$nextHalfScoreIndex = array_rand($availables);
 		foreach ($this->halfScores as $index => $halfScore) {
@@ -94,4 +94,3 @@ class Bucket
 		return $nextHalfScoreIndex;
 	}
 }
-

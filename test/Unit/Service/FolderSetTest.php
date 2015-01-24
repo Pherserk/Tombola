@@ -11,15 +11,17 @@ class FolderSetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGenerate()
 	{
-		$folderSet = new FolderSet;
+		$folderSet = new FolderSet();
 
 		$error = false;
 		try {
-			$folderSet->generate();
+			$folderset = $folderSet->generate();			
 		} catch (\Exception $e) {
 			$error = true;
+			echo $e->getMessage();
 		}
 
+		$this->assertCount(6, $folderset);
 		$this->assertFalse($error);
 	} 
 }

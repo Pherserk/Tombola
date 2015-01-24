@@ -2,6 +2,11 @@
 
 namespace Pherserk\Tombola\Service;
 
+use Pherserk\Tombola\Bucket;
+use Pherserk\Tombola\Row;
+use Pherserk\Tombola\Folder;
+
+
 class FolderSet
 {
 	/**
@@ -15,27 +20,24 @@ class FolderSet
 		for ($k=0; $k<18; $k++) {
 			$row = new Row();
 			for ($i=0;$i<5;$i++) {
-				try {
-					$number = $bucket->extractNumber();
-					$row->addNumber($number);
-				} catch(RowException $e) {
-					$errors++;
-				}					
+				$number = $bucket->extractNumber();
+				$row->addNumber($number);
+			
 			}
 			$rows[] = $row;
 		}	
 
 		$folders = [];
 		for($i=0; $i<6; $i++) {
+
 			$folder = new Folder();
-			$folder->addRow(array_pop($rows));
-			$folder->addRow(array_pop($rows));
-			$folder->addRow(array_pop($rows));
-			
+			$folder
+				->addRow(array_pop($rows))
+				->addRow(array_pop($rows))
+				->addRow(array_pop($rows));
+						
 			$folders[] = $folder;
 		}		
-
-		shuffle($folders);
 
 		return $folders;	
 	}
