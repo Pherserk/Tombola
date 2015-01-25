@@ -6,25 +6,37 @@ use Pherserk\Tombola\Service\FolderFormatter;
 
 class FolderFormatterTest extends \PHPUnit_Framework_TestCase
 {
-	public function testFormatAsArray()
+	public function testFormatAsArrayReturnsNullFilledRowsAndOrderedColumns()
+	{
+		$folder = $this->buildMockedFolder();
+		
+		$formattedFolder = FolderFormatter::formatAsArray($folder);
+
+		$firstFormattedFolderRow = $formattedFolder[0];
+		$expectedFormattedFolderRow = [1, null, null, 30, 40, null, 60, null, 80];
+
+		$this->assertArrayEquals($expectedFormattedFolderRow, $firstFormattedFolderRow);
+	}
+
+	protected function buildMockedFolder()
 	{
 		$row = $this->getMockBuilder('Pherserk\Tombola\Row')
 			->getMock();
 		$row->expects($this->once())
 			->method('getCells')
-			->will($this->returnValue([1,30,40,60,80]));
+			->will($this->returnValue([2,30,41,60,81]));
 
 		$row2 = $this->getMockBuilder('Pherserk\Tombola\Row')
 			->getMock();
 		$row2->expects($this->once())
 			->method('getCells')		
-			->will($this->returnValue([2,20,50,70,81]));
+			->will($this->returnValue([1,20,50,70,80]));
 
 		$row3 = $this->getMockBuilder('Pherserk\Tombola\Row')
 			->getMock();
 		$row3->expects($this->once())
 			->method('getCells')		
-			->will($this->returnValue([31,41,51,71,62]));
+			->will($this->returnValue([31,40,51,71,62]));
 
 		$rows = [$row, $row2, $row3];
 
@@ -33,13 +45,8 @@ class FolderFormatterTest extends \PHPUnit_Framework_TestCase
 		$folder->expects($this->once())
 			->method('getRows')
 			->will($this->returnValue($rows));
-		
-		$formattedFolder = FolderFormatter::formatAsArray($folder);
 
-		$firstFormattedFolderRow = $formattedFolder[0];
-		$expectedFormattedFolderRow = [1, null, null, 30, 40, null, 60, null, 80];
-
-		$this->assertArrayEquals($expectedFormattedFolderRow, $firstFormattedFolderRow);
+		return $folder;
 	}
 
 	protected function assertArrayEquals($expected, $current)

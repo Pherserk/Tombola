@@ -15,7 +15,9 @@ class FolderFormatter
 	{
 		$filledRows = self::fillEmptySpaces($folder);
 
-		return $filledRows;
+		$orderedRows = self::orderColumns($filledRows);
+
+		return $orderedRows;
 	}
 
 	/**
@@ -40,6 +42,47 @@ class FolderFormatter
 		}		
 
 		return $filledRows;
+	}
+
+	protected static function orderColumns($rows)
+	{
+		$orderedRows = [];
+
+		$columns = [];
+		for ($i = 0; $i < 9; $i++) {
+			$columns[] = [
+				$rows[0][$i],
+				$rows[1][$i],
+				$rows[2][$i],
+			];
+		}
+
+		foreach ($columns as $key => $column) {
+			$nonEmptyCells = array_diff($column, [null]);
+
+			if (count($nonEmptyCells) > 1) {
+				$max = max($nonEmptyCells);
+				$min = min($nonEmptyCells);
+
+				$maxPosition = array_search($max, $column);
+				$minPosition = array_search($min, $column);
+
+				if ($maxPosition < $minPosition) {
+					$columns[$key][$maxPosition] = $min;
+					$columns[$key][$minPosition] = $max;
+				}				
+			}
+		}
+
+		for ($i = 0; $i < 3; $i++) {
+			$orderedRows[] = [
+				$columns[0][$i], $columns[1][$i], $columns[2][$i], 
+				$columns[3][$i], $columns[4][$i], $columns[5][$i], 
+				$columns[6][$i], $columns[7][$i], $columns[8][$i]
+			];
+		}
+
+		return $orderedRows;
 	}
 
 }
