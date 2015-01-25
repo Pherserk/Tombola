@@ -17,7 +17,13 @@ class FolderFormatter
 
 		$orderedRows = self::orderColumns($filledRows);
 
-		return $orderedRows;
+		$hash = '';
+		foreach ($orderedRows as $orderedRow) {
+			$hash .= md5(implode(',', $orderedRow));
+		}
+		$hash = md5($hash);
+
+		return ['hash' => $hash, 'rows' => $orderedRows];
 	}
 
 	/**

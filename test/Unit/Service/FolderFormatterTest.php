@@ -12,7 +12,8 @@ class FolderFormatterTest extends \PHPUnit_Framework_TestCase
 		
 		$formattedFolder = FolderFormatter::formatAsArray($folder);
 
-		$firstFormattedFolderRow = $formattedFolder[0];
+		$firstFormattedFolderRow = $formattedFolder['rows'][0];
+
 		$expectedFormattedFolderRow = [1, null, null, 30, 40, null, 60, null, 80];
 
 		$this->assertArrayEquals($expectedFormattedFolderRow, $firstFormattedFolderRow);
